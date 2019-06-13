@@ -3,18 +3,18 @@ This plug-in lets you complete e-mail addresses in Vim by those in your inbox (o
 # Usage
 
 When you're editing a mail file in Vim that reads
-```sh
+```mail
     From: Fulano <Fulano@Silva.com>
-    To: foo
+    To:   foo
 ```
 and in your Inbox there is an e-mail from
-```sh
-    foo@bar.com
+```mail
+    Mister Foo <foo@bar.com>
 ```
 and your cursor is right after `foo`, then hit `Ctrl+X Ctrl+O` to obtain:
-```sh
+```mail
     From: Fulano <Fulano@Silva.com>
-    To: foo@bar.com
+    To:   Mister Foo <foo@bar.com>
 ```
 
 # Commands

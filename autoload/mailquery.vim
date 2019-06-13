@@ -58,8 +58,11 @@ function! mailquery#complete(findstart, base) abort
       endif
       let words = split(line, '\t')
       let dict = {}
-      let dict['word'] = words[0]
-      let dict['menu'] = words[1]
+      let address = words[0]
+      let name = substitute(words[1], '\v^"|"$', '', 'g')
+      let dict['word'] = name . ' <' . address . '>'
+      let dict['abbr'] = name
+      let dict['menu'] = address
       " add to the complete list
       call add(results, dict)
     endfor

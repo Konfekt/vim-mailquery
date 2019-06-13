@@ -9,16 +9,16 @@ This plug-in lets you complete e-mail addresses in Vim by those in your inbox
 When you're editing a mail file in Vim that reads
 >
     From: Fulano <Fulano@Silva.com>
-    To: foo
+    To:   foo
 <
-and in your Inbox there is mail from
+and in your Inbox there is an e-mail from
 >
-    alias foo My Foo <foo@bar.com>
+    Mister Foo <foo@bar.com>
 <
 and your cursor is right after foo, then hit Ctrl+X Ctrl+O to obtain:
 >
     From: Fulano <Fulano@Silva.com>
-    To: My Foo <foo@bar.com>
+    To:   Mister Foo <foo@bar.com>
 <
 
 ===========================================================================
