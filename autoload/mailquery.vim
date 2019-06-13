@@ -1,23 +1,42 @@
-function! mailquery#FindMailqueryFolder() abort
-  if exists('g:mailquery_folder')
-    let folder = g:mailquery_folder
-  else
-    let muttrc = readfile(expand('~/.muttrc'))
-    for line in muttrc
-      let folder = matchlist(line,'\v^\s*set\s+folder\s*\=\s*[''"]?([^''"]*)[''"]?$')
-      if !empty(folder)
-        let folder = resolve(expand(folder[1]))
-      endif
-      echoerr 'Guessed inbox folder by $folder in ~/.muttrc.'
-      echoerr 'Please set g:mailquery_folder to mutt inbox folder in vimrc!'
-    endfor
+function! mailquery#SetMailqueryFolder() abort
+  if !executable('mail-query')
+    echoerr 'No executable mail-query found.'
+    echoerr 'Please install mail-query from https://github.com/pbrisbin/mail-query!'
+    let g:mailquery_folder = ''
   endif
-  if !isdirectory(folder)
-    echoerr 'No existing $folder in ~/.muttrc found.'
-    echoerr 'Please set g:mailquery_folder to mutt inbox folder in vimrc!'
-    return ''
-  else
-    return folder
+
+  if !exists('g:mailquery_folder')
+    if executable('mutt')
+      let output = split(system('mutt -Q "folder"'), '\n')
+
+      for line in output
+        let folder = matchlist(line,'\v^\s*folder\s*\=\s*[''"]?([^''"]*)[''"]?$')
+        if !empty(folder)
+          let g:mailquery_folder = resolve(expand(folder[1]))
+        else
+          let g:mailquery_folder = ''
+        endif
+      endfor
+    else
+      " pedestrian's way
+      let muttrc = readfile(expand('~/.muttrc'))
+      for line in muttrc
+        let folder = matchlist(line,'\v^\s*set\s+folder\s*\=\s*[''"]?([^''"]*)[''"]?$')
+        if !empty(folder)
+          let folder = resolve(expand(folder[1]))
+          let g:mailquery_folder = folder
+        endif
+      endfor
+    endif
+    if !empty(g:mailquery_folder)
+      echoerr 'Guessed inbox folder by $folder in ~/.muttrc to be ' . g:mailquery_folder . '.'
+      echoerr 'Please set g:mailquery_folder in your vimrc to a mail folder!'
+    endif
+  endif
+
+  if !isdirectory(g:mailquery_folder)
+    echoerr 'Please set g:mailquery_folder in your vimrc to a valid (mail) folder path!'
+    let g:mailquery_folder = ''
   endif
 endfunction
 
@@ -39,34 +58,27 @@ function! mailquery#complete(findstart, base) abort
     let pattern_delim = before . '\b' . base . after
     let pattern = before . base . after
 
-    let inbox_folder = mailquery#FindMailqueryFolder()
-    if empty(inbox_folder)
-      return []
-    endif
-
     let results = []
 
-    if !executable('mail-query')
-      echoerr 'No executable mail-query found.'
-      echoerr 'Please install mail-query from https://github.com/pbrisbin/mail-query!'
-      return []
+    if empty(g:mailquery_folder)
+      return results
+    else
+      for line in split(system("mail-query" . " '" . pattern . "' " . g:mailquery_folder), '\n')
+        if empty(line)
+          continue
+        endif
+        let words = split(line, '\t')
+        let dict = {}
+        let address = words[0]
+        let name = substitute(words[1], '\v^"|"$', '', 'g')
+        let dict['word'] = name . ' <' . address . '>'
+        let dict['abbr'] = name
+        let dict['menu'] = address
+        " add to the complete list
+        call add(results, dict)
+      endfor
+      return results
     endif
-
-    for line in split(system("mail-query" . " '" . pattern . "' " . inbox_folder), '\n')
-      if empty(line)
-        continue
-      endif
-      let words = split(line, '\t')
-      let dict = {}
-      let address = words[0]
-      let name = substitute(words[1], '\v^"|"$', '', 'g')
-      let dict['word'] = name . ' <' . address . '>'
-      let dict['abbr'] = name
-      let dict['menu'] = address
-      " add to the complete list
-      call add(results, dict)
-    endfor
-    return results
   endif
 endfunction
 
