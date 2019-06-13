@@ -1,15 +1,30 @@
           vim-mailquery              *mailquery* *mail-query*
 
 ===========================================================================
-0. Introduction ~
+0. Usage ~
 
 This plug-in lets you complete e-mail addresses in Vim by those in your inbox
 (or any other mail folder) via https://github.com/pbrisbin/mail-query .
 
+When you're editing a mail file in Vim that reads
+>
+    From: Fulano <Fulano@Silva.com>
+    To: foo
+<
+and in your Inbox there is mail from
+>
+    alias foo My Foo <foo@bar.com>
+<
+and your cursor is right after foo, then hit Ctrl+X Ctrl+O to obtain:
+>
+    From: Fulano <Fulano@Silva.com>
+    To: My Foo <foo@bar.com>
+<
+
 ===========================================================================
 1. Commands ~
 
-To complete e-mail addresses inside Vim press CTRL-X CTRL-O inside insert
+To complete e-mail addresses inside Vim press CTRL-X CTRL-O in insert
 mode. See |i_CTRL-X_CTRL-O| and |compl-omni|.
 
 ===========================================================================
@@ -32,7 +47,7 @@ To set the path to your mail folder $folder add to your `.vimrc` the line
 >
   let g:mailquery_folder = '$folder'
 <
-For example, if you use mbsync, a possible value of $folder would be
+For example, if you use mbsync, then $folder could be
 >
   $XDG_DATA_HOME/mbsync/INBOX/cur
 <
@@ -40,8 +55,8 @@ For example, if you use mbsync, a possible value of $folder would be
 ===========================================================================
 3. Related Plug-in ~
 
-The plugin https://github.com/Konfekt/vim-mutt-aliases-plugin lets you
-complete e-mail addresses in Vim by those in your mutt alias file.
+The plugin https://github.com/Konfekt/vim-mutt-aliases lets you
+complete e-mail addresses in Vim by those in your mutt aliases file.
 
 vim:tw=78:ts=2:sts=2:sw=2:ft=help:norl
 

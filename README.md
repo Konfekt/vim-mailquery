@@ -1,5 +1,22 @@
 This plug-in lets you complete e-mail addresses in Vim by those in your inbox (or any other mail folder) via [mail-query](https://github.com/pbrisbin/mail-query).
 
+# Usage
+
+When you're editing a mail file in Vim that reads
+```sh
+    From: Fulano <Fulano@Silva.com>
+    To: foo
+```
+and in your Inbox there is mail from
+```sh
+    foo@bar.com
+```
+and your cursor is right after foo, then hit Ctrl+X Ctrl+O to obtain:
+```sh
+    From: Fulano <Fulano@Silva.com>
+    To: foo@bar.com
+```
+
 # Commands
 
 To complete an e-mail address inside Vim press `CTRL-X CTRL-O` in insert
