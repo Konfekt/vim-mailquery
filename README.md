@@ -28,25 +28,35 @@ Download and compile [mail-query](https://github.com/pbrisbin/mail-query) and ad
 
 - on Linux, if you use `bash` or `zsh` by adding to `~/.profile` or `~/.zshenv` the line
 
-```sh
-    PATH=$PATH:~/bin
-```
+    ```sh
+        PATH=$PATH:~/bin
+    ```
 
 - on Microsoft Windows, a convenient program to update `%PATH%` is [Rapidee](http://www.rapidee.com/).
 
 
 To set the path to your mail folder `$folder` add to your `.vimrc` the line
 
-```vim
-  let g:mailquery_folder = '$folder'
-```
+    ```vim
+    let g:mailquery_folder = '$folder'
+    ```
 
 For example, if you use mbsync, a possible value of `$folder` would be
 
-```sh
-  $XDG_DATA_HOME/mbsync/INBOX/cur
-```
+    ```sh
+    $XDG_DATA_HOME/mbsync/INBOX/cur
+    ```
 
 # Related Plug-ins
 
 The [vim-mutt-aliases](https://github.com/Konfekt/vim-mutt-aliases) plug-in lets you complete e-mail addresses in Vim by those in your `mutt` alias file.
+
+# Credits
+
+- to Patrick Brisbin's [mail-query](https://github.com/pbrisbin/mail-query).
+- to Lu Guanqun as the fork [vim-mutt-aliases](https://github.com/Konfekt/vim-mutt-aliases) of [Lu Guanqun](mailto:guanqun.lu@gmail.com)'s [vim-mutt-aliases-plugin](https://github.com/guanqun/vim-mutt-aliases-plugin/tree/063a7bdd0d852a118253278721f74a053776135d) served as a template.
+
+# License
+
+Distributable under the same terms as Vim itself.  See `:help license`.
+
