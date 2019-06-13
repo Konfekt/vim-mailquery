@@ -46,7 +46,12 @@ function! muttcomplete#mailquery(findstart, base) abort
 
     let results = []
 
-    for line in systemlist("mail-query" . " '" . pattern . "' " . inbox_folder)
+    if !executable('mail-query')
+      echoerr 'No executable mail-query found.'
+      echoerr 'Please install mail-query from https://github.com/pbrisbin/mail-query!'
+      return []
+    endif
+
     for line in split(system("mail-query" . " '" . pattern . "' " . inbox_folder), '\n')
       if empty(line)
         continue
