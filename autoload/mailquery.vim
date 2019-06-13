@@ -1,4 +1,4 @@
-function! muttcomplete#FindMailqueryFolder() abort
+function! mailquery#FindMailqueryFolder() abort
   if exists('g:mailquery_folder')
     let folder = g:mailquery_folder
   else
@@ -21,7 +21,7 @@ function! muttcomplete#FindMailqueryFolder() abort
   endif
 endfunction
 
-function! muttcomplete#mailquery(findstart, base) abort
+function! mailquery#complete(findstart, base) abort
   if a:findstart
     " locate the start of the word
     " we stop when we encounter space character
@@ -39,7 +39,7 @@ function! muttcomplete#mailquery(findstart, base) abort
     let pattern_delim = before . '\b' . base . after
     let pattern = before . base . after
 
-    let inbox_folder = muttcomplete#FindMailqueryFolder()
+    let inbox_folder = mailquery#FindMailqueryFolder()
     if empty(inbox_folder)
       return []
     endif
