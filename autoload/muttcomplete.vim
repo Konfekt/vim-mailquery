@@ -47,6 +47,7 @@ function! muttcomplete#mailquery(findstart, base) abort
     let results = []
 
     for line in systemlist("mail-query" . " '" . pattern . "' " . inbox_folder)
+    for line in split(system("mail-query" . " '" . pattern . "' " . inbox_folder), '\n')
       if empty(line)
         continue
       endif
