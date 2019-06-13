@@ -1,12 +1,11 @@
-This plug-in lets you complete e-mail addresses in Vim by those in your inbox
-(or any other mail folder) via [mail-query](https://github.com/pbrisbin/mail-query).
+This plug-in lets you complete e-mail addresses in Vim by those in your inbox (or any other mail folder) via [mail-query](https://github.com/pbrisbin/mail-query).
 
 # Commands
 
 To complete an e-mail address inside Vim press `CTRL-X CTRL-O` in insert
 mode. See `:help i_CTRL-X_CTRL-O` and `:help compl-omni`.
 
-# Config
+# Setup
 
 To set the path to your mail folder `$folder` add to your `.vimrc` the line
 
@@ -20,3 +19,6 @@ For example, if you use mbsync, a possible value of `$folder` would be
   $XDG_DATA_HOME/mbsync/INBOX/cur
 ```
 
+# Related Plug-ins
+
+The [vim-mutt-aliases-plugin](https://github.com/Konfekt/vim-mutt-aliases-plugin) lets you complete e-mail addresses in Vim by those in your `mutt` alias file.
