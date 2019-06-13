@@ -7,11 +7,11 @@ When you're editing a mail file in Vim that reads
     From: Fulano <Fulano@Silva.com>
     To: foo
 ```
-and in your Inbox there is mail from
+and in your Inbox there is an e-mail from
 ```sh
     foo@bar.com
 ```
-and your cursor is right after foo, then hit Ctrl+X Ctrl+O to obtain:
+and your cursor is right after `foo`, then hit `Ctrl+X Ctrl+O` to obtain:
 ```sh
     From: Fulano <Fulano@Silva.com>
     To: foo@bar.com
@@ -24,24 +24,20 @@ mode. See `:help i_CTRL-X_CTRL-O` and `:help compl-omni`.
 
 # Setup
 
-Download and compile [mail-query](https://github.com/pbrisbin/mail-query) and add the path (say `~/bin` or `%USERPROFILE%\bin`) of the folder that contains the obtained executable `mail-query` to your environment variable `$PATH` (on Linux) respectively `%PATH%` (on Microsoft Windows):
-
-- on Linux, if you use `bash` or `zsh` by adding to `~/.profile` or `~/.zshenv` the line
+1. Download and compile [mail-query](https://github.com/pbrisbin/mail-query) and add the path of the folder that contains the obtained executable `mail-query` (say `~/bin`) to your environment variable `$PATH`:
+    If you use `bash` or `zsh` by adding to `~/.profile` or `~/.zshenv` the line
 
     ```sh
         PATH=$PATH:~/bin
     ```
 
-- on Microsoft Windows, a convenient program to update `%PATH%` is [Rapidee](http://www.rapidee.com/).
-
-
-To set the path to your mail folder `$folder` add to your `.vimrc` the line
+2. To set the path to your mail folder `$folder`, add to your `.vimrc` the line
 
     ```vim
     let g:mailquery_folder = '$folder'
     ```
 
-For example, if you use mbsync, a possible value of `$folder` would be
+    For example, if you use `mbsync`, a possible value of `$folder` would be
 
     ```sh
     $XDG_DATA_HOME/mbsync/INBOX/cur
