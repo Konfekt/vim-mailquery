@@ -1,4 +1,5 @@
-This plug-in lets you complete e-mail addresses in Vim by those in your inbox (or any other mail folder) via [mail-query](https://github.com/pbrisbin/mail-query).
+This plug-in lets you complete e-mail addresses in Vim by those found in your inbox (or any other mail folder) via [mail-query](https://github.com/pbrisbin/mail-query).
+Useful, for example, when using `Vim` as editor for `mutt` (especially with `$edit_headers` set).
 
 # Usage
 
