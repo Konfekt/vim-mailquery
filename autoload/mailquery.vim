@@ -10,27 +10,29 @@ function! mailquery#SetMailqueryFolder() abort
       let output = split(system('mutt -Q "folder"'), '\n')
 
       for line in output
-        let folder = matchlist(line,'\v^\s*folder\s*\=\s*[''"]?([^''"]*)[''"]?$')
+        let folder = matchlist(line,'\v^\s*' . 'folder' . '\s*\=\s*[''"]?([^''"]*)[''"]?$')
         if !empty(folder)
           let g:mailquery_folder = resolve(expand(folder[1]))
         else
           let g:mailquery_folder = ''
         endif
       endfor
-    else
+    elseif filereadable(expand('~/.muttrc'))
       " pedestrian's way
       let muttrc = readfile(expand('~/.muttrc'))
       for line in muttrc
-        let folder = matchlist(line,'\v^\s*set\s+folder\s*\=\s*[''"]?([^''"]*)[''"]?$')
+        let folder = matchlist(line,'\v^\s*set\s+' . 'folder' . '\s*\=\s*[''"]?([^''"]*)[''"]?$')
         if !empty(folder)
           let folder = resolve(expand(folder[1]))
           let g:mailquery_folder = folder
         endif
       endfor
+    else
+      let g:mailquery_folder = ''
     endif
     if !empty(g:mailquery_folder)
-      echoerr 'Guessed inbox folder by $folder in ~/.muttrc to be ' . g:mailquery_folder . '.'
-      echoerr 'Please set g:mailquery_folder in your vimrc to a mail folder!'
+      echomsg 'Guessed mail folder by value of $folder in ~/.muttrc to be ' . g:mailquery_folder . '.'
+      " echohl 'Please set g:mailquery_folder in your vimrc to a mail folder!'
     endif
   endif
 

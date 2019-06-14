@@ -25,19 +25,20 @@ mode. See `:help i_CTRL-X_CTRL-O` and `:help compl-omni`.
 # Setup
 
 1. Download and compile [mail-query](https://github.com/pbrisbin/mail-query) and add the path of the folder that contains the obtained executable `mail-query` (say `~/bin`) to your environment variable `$PATH`:
-    If you use `bash` or `zsh` by adding to `~/.profile` or `~/.zshenv` the line
+    If you use `bash` or `zsh`, by adding to `~/.profile` or `~/.zshenv` the line
 
     ```sh
         PATH=$PATH:~/bin
     ```
 
-2. To set the path to your mail folder `$folder`, add to your `.vimrc` the line
+2. The mail folder is automatically set to the value of the variable `$folder` in the file `~/.muttrc`.
+    To explicitly set the path to a mail folder `$folder`, add to your `.vimrc` the line
 
     ```vim
     let g:mailquery_folder = '$folder'
     ```
 
-    For example, if you use `mbsync`, a possible value of `$folder` would be
+    For example, if you use `mbsync`, then `$folder` could be
 
     ```sh
     $XDG_DATA_HOME/mbsync/INBOX/cur

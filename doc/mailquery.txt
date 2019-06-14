@@ -30,24 +30,22 @@ mode. See |i_CTRL-X_CTRL-O| and |compl-omni|.
 ===========================================================================
 2. Setup ~
 
-Download and compile mail-query from https://github.com/pbrisbin/mail-query
-and add the path (say ~/bin or %USERPROFILE%\bin) of the folder that contains
-the obtained executable `mail-query` to your environment variable `$PATH` (on
-Linux) respectively `%PATH%` (on Microsoft Windows):
-
-- on Linux, if you use bash or zsh by adding to ~/.profile or ~/.zshenv the
+1. Download and compile mail-query from https://github.com/pbrisbin/mail-query
+  and add the path (say ~/bin or %USERPROFILE%\bin) of the folder that
+  contains the obtained executable mail-query to your environment variable
+  $PATH: If you use bash or zsh, by adding to ~/.profile or ~/.zshenv the
   line
 >
     PATH=$PATH:~/bin
 <
-- on Microsoft Windows, a convenient program to update `%PATH%` is
-  [Rapidee](http://www.rapidee.com/).
 
-To set the path to your mail folder $folder add to your `.vimrc` the line
+2. The mail folder is automatically set to the value of the variable `$folder`
+   in the file `~/.muttrc`. To explicitly set the path to a mail folder
+   `$folder`, add to your `.vimrc` the line
 >
   let g:mailquery_folder = '$folder'
 <
-For example, if you use mbsync, then $folder could be
+  For example, if you use mbsync, then $folder could be
 >
   $XDG_DATA_HOME/mbsync/INBOX/cur
 <
