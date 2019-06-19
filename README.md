@@ -25,7 +25,8 @@ mode. See `:help i_CTRL-X_CTRL-O` and `:help compl-omni`.
 
 # Setup
 
-1. Download and compile [mail-query](https://github.com/pbrisbin/mail-query) and add the path of the folder that contains the obtained executable `mail-query` (say `~/bin`) to your environment variable `$PATH`:
+1. Download and install (by `sudo make install`) [mail-query](https://github.com/pbrisbin/mail-query).
+    If you are missing superuser rights, then compile it (by `make`) add the path of the folder that contains the obtained executable `mail-query` (say `~/bin`) to your environment variable `$PATH`:
     If you use `bash` or `zsh`, by adding to `~/.profile` or `~/.zshenv` the line
 
     ```sh

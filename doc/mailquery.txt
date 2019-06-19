@@ -32,18 +32,18 @@ mode. See |i_CTRL-X_CTRL-O| and |compl-omni|.
 ===========================================================================
 2. Setup ~
 
-1. Download and compile mail-query from https://github.com/pbrisbin/mail-query
-  and add the path (say ~/bin or %USERPROFILE%\bin) of the folder that
-  contains the obtained executable mail-query to your environment variable
-  $PATH: If you use bash or zsh, by adding to ~/.profile or ~/.zshenv the
-  line
+1. Download and install by sudo make install) mail-query from
+   https://github.com/pbrisbin/mail-query.
+   If you are missing superuser rights, then compile it (by make) add the
+   path of the folder that contains the obtained executable mail-query to your
+   environment variable $PATH: If you use bash or zsh, by adding to ~/.profile
+   or ~/.zshenv the line
 >
     PATH=$PATH:~/bin
 <
-
-2. The mail folder is automatically set to the value of the variable `$folder`
-   in the file `~/.muttrc`. To explicitly set the path to a mail folder
-   `$folder`, add to your `.vimrc` the line
+2. The mail folder is automatically set to the value of the variable $folder
+   in the file ~/.muttrc. To explicitly set the path to a mail folder
+   $folder, add to your .vimrc the line
 >
     let g:mailquery_folder = '$folder'
 <
