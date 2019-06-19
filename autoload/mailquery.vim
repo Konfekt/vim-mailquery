@@ -6,7 +6,7 @@ function! mailquery#SetupMailquery() abort
     " Setup g:mailquery_filter_regex
     if !exists('g:mailquery_filter_regex')
       let g:mailquery_filter_regex = '\v^[[:alnum:]._%+-]*%([0-9]{9,}|([0-9]+[a-z]+){3,}|\+|not?([-_.])?reply|<(un)?subscribe>|<MAILER\-DAEMON>)[[:alnum:]._%+-]*\@'
-  endif
+    endif
   endif
   " Setup g:mailquery_folder
   if !exists('g:mailquery_folder')
@@ -60,6 +60,7 @@ function! mailquery#complete(findstart, base) abort
     " let start = match(text_before_cursor, '\v<([[:digit:][:lower:][:upper:]]+[._%+-@]?)+$')
     let start = match(text_before_cursor, '\v<\S+$')
     return start
+    " build perl regex for mail-query
   else
     if empty(g:mailquery_folder)
       return []
@@ -68,23 +69,33 @@ function! mailquery#complete(findstart, base) abort
     let before = '^[^@]*'
     let base   = escape(a:base, '\-[]{}()*+?.^$|')
     let after  = '[^@]*($|[@])'
+    let pattern_perl = before . base . after
 
-    let pattern_begin = '^' . base . after
-    let pattern_delim = before . '\b' . base . after
-    let pattern = before . base . after
+    let lines = split(system("mail-query" . " '" . pattern_perl . "' " . g:mailquery_folder), '\n')
 
-    let results = []
+    if empty(lines)
+      return
+    endif
 
-    if empty(g:mailquery_folder)
-      return results
-    else
-      for line in split(system("mail-query" . " '" . pattern . "' " . g:mailquery_folder), '\n')
-        if empty(line)
-          continue
-        endif
-        let words = split(line, '\t')
-        let dict = {}
-        let address = words[0]
+    " build vim regex to sort according to whether pattern matches at
+    " beginning or after delimiter
+    let before = '\v^[^@]*'
+    let base   = '\V' . escape(a:base, '\')
+    let after  = '\v[^@]*($|[@])'
+
+    let pattern       = before . base . after
+    let pattern_delim = before . '\v(^|\A)' . base . after
+    let pattern_begin = '\v^' . base . after
+
+    let results = [ [], [], [], [], [], [], [] ]
+    for line in lines
+      if empty(line)
+        continue
+      endif
+
+      let words = split(line, '\t')
+      let dict = {}
+      let address = words[0]
 
       " skip impersonal addresses
       if g:mailquery_filter && address =~? g:mailquery_filter_regex
@@ -92,15 +103,40 @@ function! mailquery#complete(findstart, base) abort
       endif
 
       " remove double quotes
-        let name = substitute(words[1], '\v^"|"$', '', 'g')
-        let dict['word'] = name . ' <' . address . '>'
-        let dict['abbr'] = name
-        let dict['menu'] = address
-        " add to the complete list
-        call add(results, dict)
-      endfor
-      return results
-    endif
+      let name = substitute(words[1], '\v^"|"$', '', 'g')
+
+      " add to completion menu
+      let dict['word'] = name . ' <' . address . '>'
+      let dict['abbr'] = name
+      let dict['menu'] = address
+
+      " weight  according to whether pattern matches at
+      " beginning or after delimiter in name or address
+      let weight = 0
+      if name =~? pattern
+        let weight += 1
+        if    name =~? pattern_delim
+          let weight += 1
+          if  name =~? pattern_begin
+            let weight += 1
+          endif
+        endif
+      endif
+      if address =~? pattern
+        let weight += 1
+        if    address =~? pattern_delim
+          let weight += 1
+          if  address =~? pattern_begin
+            let weight += 1
+          endif
+        endif
+      endif
+      call add(results[weight], dict)
+    endfor
+    let results = sort(results[6], 1) +
+          \ sort(results[5], 1) + sort(results[4], 1) + sort(results[3], 1) +
+          \ sort(results[2], 1) + sort(results[1], 1) + sort(results[0], 1)
+    return results
   endif
 endfunction
 
