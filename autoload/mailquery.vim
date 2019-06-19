@@ -1,10 +1,14 @@
-function! mailquery#SetMailqueryFolder() abort
-  if !executable('mail-query')
-    echoerr 'No executable mail-query found.'
-    echoerr 'Please install mail-query from https://github.com/pbrisbin/mail-query!'
-    let g:mailquery_folder = ''
+function! mailquery#SetupMailquery() abort
+  " Setup g:mailquery_filter
+  if !exists('g:mailquery_filter')
+    let g:mailquery_filter = 0
+  elseif g:mailquery_filter
+    " Setup g:mailquery_filter_regex
+    if !exists('g:mailquery_filter_regex')
+      let g:mailquery_filter_regex = '\v^[[:alnum:]._%+-]*%([0-9]{9,}|([0-9]+[a-z]+){3,}|\+|not?([-_.])?reply|<(un)?subscribe>|<MAILER\-DAEMON>)[[:alnum:]._%+-]*\@'
   endif
-
+  endif
+  " Setup g:mailquery_folder
   if !exists('g:mailquery_folder')
     if executable('mutt')
       let output = split(system('mutt -Q "folder"'), '\n')
@@ -40,6 +44,11 @@ function! mailquery#SetMailqueryFolder() abort
     echoerr 'Please set g:mailquery_folder in your vimrc to a valid (mail) folder path!'
     let g:mailquery_folder = ''
   endif
+
+  if !executable('mail-query')
+    echoerr 'No executable mail-query found.'
+    echoerr 'Please install mail-query from https://github.com/pbrisbin/mail-query!'
+  endif
 endfunction
 
 function! mailquery#complete(findstart, base) abort
@@ -52,6 +61,10 @@ function! mailquery#complete(findstart, base) abort
     let start = match(text_before_cursor, '\v<\S+$')
     return start
   else
+    if empty(g:mailquery_folder)
+      return []
+    endif
+
     let before = '^[^@]*'
     let base   = escape(a:base, '\-[]{}()*+?.^$|')
     let after  = '[^@]*($|[@])'
@@ -72,6 +85,13 @@ function! mailquery#complete(findstart, base) abort
         let words = split(line, '\t')
         let dict = {}
         let address = words[0]
+
+      " skip impersonal addresses
+      if g:mailquery_filter && address =~? g:mailquery_filter_regex
+        continue
+      endif
+
+      " remove double quotes
         let name = substitute(words[1], '\v^"|"$', '', 'g')
         let dict['word'] = name . ' <' . address . '>'
         let dict['abbr'] = name

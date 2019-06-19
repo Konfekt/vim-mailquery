@@ -45,12 +45,19 @@ mode. See |i_CTRL-X_CTRL-O| and |compl-omni|.
    in the file `~/.muttrc`. To explicitly set the path to a mail folder
    `$folder`, add to your `.vimrc` the line
 >
-  let g:mailquery_folder = '$folder'
+    let g:mailquery_folder = '$folder'
 <
   For example, if you use mbsync, then $folder could be
 >
-  $XDG_DATA_HOME/mbsync/INBOX/cur
+    $XDG_DATA_HOME/mbsync/INBOX/cur
 <
+3. If you would like to filter out most probably impersonal e-mail addresses
+   such as those coming from mailer daemons or accepting no reply, try
+>
+    let g:mailquery_filter = 1
+<
+   The regular expression which these addresses are checked against can be
+   customized by the variable g:mailquery_filter_regex.
 
 ===========================================================================
 3. Related Plug-in ~
