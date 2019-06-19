@@ -110,28 +110,28 @@ function! mailquery#complete(findstart, base) abort
       let dict['abbr'] = name
       let dict['menu'] = address
 
-      " weight  according to whether pattern matches at
-      " beginning or after delimiter in name or address
-      let weight = 0
+      " weigh according to whether pattern matches at
+      " beginning or after some delimiter in name or address
+      let pertinence = 0
       if name =~? pattern
-        let weight += 1
+        let pertinence += 1
         if    name =~? pattern_delim
-          let weight += 1
+          let pertinence += 1
           if  name =~? pattern_begin
-            let weight += 1
+            let pertinence += 1
           endif
         endif
       endif
       if address =~? pattern
-        let weight += 1
+        let pertinence += 1
         if    address =~? pattern_delim
-          let weight += 1
+          let pertinence += 1
           if  address =~? pattern_begin
-            let weight += 1
+            let pertinence += 1
           endif
         endif
       endif
-      call add(results[weight], dict)
+      call add(results[pertinence], dict)
     endfor
     let results = sort(results[6], 1) +
           \ sort(results[5], 1) + sort(results[4], 1) + sort(results[3], 1) +
