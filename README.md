@@ -46,13 +46,13 @@ mode. See `:help i_CTRL-X_CTRL-O` and `:help compl-omni`.
     $XDG_DATA_HOME/mbsync/INBOX/cur
     ```
 
-3. If you would like to filter out most probably impersonal e-mail addresses such as those coming from mailer daemons or accepting no reply, then try adding
+3. If you would like to filter out most probably impersonal e-mail addresses such as those from mailer daemons or that accept no reply, then try adding
 
     ```vim
     let g:mailquery_filter = 1
     ```
 
-    to your `vimrc`, which will discard e-mail addresses that satisfy the regular expression given by the variable `g:mailquery_filter_regex` and which defaults to
+    to your `vimrc`, which will discard all e-mail addresses that satisfy the regular expression given by the variable `g:mailquery_filter_regex` that defaults to
 
     ```vim
     let g:mailquery_filter_regex = '\v^[[:alnum:]._%+-]*%([0-9]{9,}|([0-9]+[a-z]+){3,}|\+|not?([-_.])?reply|<(un)?subscribe>|<mailer\-daemon>)[[:alnum:]._%+-]*\@'

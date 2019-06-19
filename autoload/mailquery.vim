@@ -133,10 +133,10 @@ function! mailquery#complete(findstart, base) abort
       endif
       call add(results[pertinence], dict)
     endfor
-    let results = sort(results[6], 1) +
+    let results = uniq(sort(results[6], 1) +
           \ sort(results[5], 1) + sort(results[4], 1) + sort(results[3], 1) +
-          \ sort(results[2], 1) + sort(results[1], 1) + sort(results[0], 1)
+          \ sort(results[2], 1) + sort(results[1], 1) + sort(results[0], 1),
+          \ 1)
     return results
   endif
 endfunction
-
