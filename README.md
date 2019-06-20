@@ -32,6 +32,8 @@ mode. See `:help i_CTRL-X_CTRL-O` and `:help compl-omni`.
     ```sh
         PATH=$PATH:~/bin
     ```
+    
+    To decode [7-bit ASCII encoded MIME-headers](https://tools.ietf.org/html/rfc2047) (= those starting, for example, with `=?UTF-8?Q?` or `=?ISO-8859-1?Q?`), ensure that `perl` is executable and the [Encode::MIME:Header](https://perldoc.perl.org/Encode/MIME/Header.html) module is installed.
 
 2. The mail folder is automatically set to the value of the variable `$folder` in the file `~/.muttrc`.
     To explicitly set the path to a mail folder `$folder`, add to your `.vimrc` the line
@@ -46,7 +48,7 @@ mode. See `:help i_CTRL-X_CTRL-O` and `:help compl-omni`.
     $XDG_DATA_HOME/mbsync/INBOX/cur
     ```
 
-3. If you would like to filter out most probably impersonal e-mail addresses such as those from mailer daemons or that accept no reply, then try adding
+3. If you would like to filter out most probably impersonal e-mail addresses such as those that come from mailer daemons or accept no reply, then try adding
 
     ```vim
     let g:mailquery_filter = 1

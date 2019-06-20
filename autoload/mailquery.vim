@@ -40,6 +40,18 @@ function! mailquery#SetupMailquery() abort
     endif
   endif
 
+  " check whether Perl module to decode MIME headers is installed
+  " thanks to https://stackoverflow.com/a/15162063
+  if !exists('g:mailquery_decodable')
+    let g:mailquery_decodable = 0
+    if executable('perl')
+      call system("perl -e 'use Encode::MIME::Header;'")
+      if v:shell_error == 0
+        let g:mailquery_decodable = 1
+      endif
+    endif
+  endif
+
   if !isdirectory(g:mailquery_folder)
     echoerr 'Please set g:mailquery_folder in your vimrc to a valid (mail) folder path!'
     let g:mailquery_folder = ''
@@ -72,6 +84,11 @@ function! mailquery#complete(findstart, base) abort
     let pattern_perl = before . base . after
 
     let lines = split(system("mail-query" . " '" . pattern_perl . "' " . g:mailquery_folder), '\n')
+
+    " convert MIME headers via Perl thanks to https://superuser.com/a/972248
+    if g:mailquery_decodable
+      let lines = split(system("perl -CS -MEncode -ne 'print decode(\"MIME-Header\", $_)'", lines), '\n')
+    endif
 
     if empty(lines)
       return

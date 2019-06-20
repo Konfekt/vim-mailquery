@@ -41,6 +41,11 @@ mode. See |i_CTRL-X_CTRL-O| and |compl-omni|.
 >
     PATH=$PATH:~/bin
 <
+   To decode [7-bit ASCII encoded MIME-headers as specified at
+   https://tools.ietf.org/html/rfc2047 (= those starting, for example, with
+   '=?UTF-8?Q?' or '=?ISO-8859-1?Q?'), ensure that perl is executable and that
+   the Encode::MIME:Header module is installed.
+
 2. The mail folder is automatically set to the value of the variable $folder
    in the file ~/.muttrc. To explicitly set the path to a mail folder
    $folder, add to your .vimrc the line
