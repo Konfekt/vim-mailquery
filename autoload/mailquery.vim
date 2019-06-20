@@ -107,7 +107,7 @@ function! mailquery#complete(findstart, base) abort
 
       " add to completion menu
       let dict['word'] = name . ' <' . address . '>'
-      let dict['abbr'] = name
+      let dict['abbr'] = strlen(name) < 35 ? name : name[0:30] . '...'
       let dict['menu'] = address
 
       " weigh according to whether pattern matches at
