@@ -42,12 +42,12 @@ function! mailquery#SetupMailquery() abort
 
   " check whether Perl module to decode MIME headers is installed
   " thanks to https://stackoverflow.com/a/15162063
-  if !exists('g:mailquery_decodable')
-    let g:mailquery_decodable = 0
+  if !exists('s:mailquery_decodable')
+    let s:mailquery_decodable = 0
     if executable('perl')
       call system("perl -e 'use Encode::MIME::Header;'")
       if v:shell_error == 0
-        let g:mailquery_decodable = 1
+        let s:mailquery_decodable = 1
       endif
     endif
   endif
@@ -57,9 +57,12 @@ function! mailquery#SetupMailquery() abort
     let g:mailquery_folder = ''
   endif
 
-  if !executable('mail-query')
+  if !exists('s:mailquery_executable') && executable('mail-query')
+    let s:mailquery_executable = 1
+  else
     echoerr 'No executable mail-query found.'
     echoerr 'Please install mail-query from https://github.com/pbrisbin/mail-query!'
+    let s:mailquery_executable = 0
   endif
 endfunction
 
@@ -83,15 +86,17 @@ function! mailquery#complete(findstart, base) abort
     let after  = '[^@]*($|[@])'
     let pattern_perl = before . base . after
 
-    let lines = split(system("mail-query" . " '" . pattern_perl . "' " . g:mailquery_folder), '\n')
-
+    let lines = []
+    if s:mailquery_executable
+      let lines = split(system("mail-query" . " '" . pattern_perl . "' " . g:mailquery_folder), '\n')
+    endif
     " convert MIME headers via Perl thanks to https://superuser.com/a/972248
-    if g:mailquery_decodable
+    if s:mailquery_decodable
       let lines = split(system("perl -CS -MEncode -ne 'print decode(\"MIME-Header\", $_)'", lines), '\n')
     endif
 
     if empty(lines)
-      return
+      return []
     endif
 
     " build vim regex to sort according to whether pattern matches at
