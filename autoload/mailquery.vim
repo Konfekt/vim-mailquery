@@ -11,13 +11,12 @@ function! mailquery#SetupMailquery() abort
   " Setup g:mailquery_folder
   if !exists('g:mailquery_folder')
     if executable('mutt')
-      let output = split(system('mutt -Q "folder"'), '\n')
       silent let output = split(system('mutt -Q "folder"'), '\n')
 
       for line in output
-        let folder = matchlist(line,'\v^\s*' . 'folder' . '\s*\=\s*[''"]?([^''"]*)[''"]?$')
+        let folder = matchstr(line,'\v^\s*' . 'folder' . '\s*\=\s*[''"]?' . '\zs[^''"]*\ze' . '[''"]?$')
         if !empty(folder)
-          let g:mailquery_folder = resolve(expand(folder[1]))
+          let g:mailquery_folder = resolve(expand(folder))
         else
           let g:mailquery_folder = ''
         endif
@@ -26,9 +25,9 @@ function! mailquery#SetupMailquery() abort
       " pedestrian's way
       let muttrc = readfile(expand('~/.muttrc'))
       for line in muttrc
-        let folder = matchlist(line,'\v^\s*set\s+' . 'folder' . '\s*\=\s*[''"]?([^''"]*)[''"]?$')
+        let folder = matchstr(line,'\v^\s*set\s+' . 'folder' . '\s*\=\s*[''"]?' . '\zs[^''"]*\ze' . '[''"]?$')
         if !empty(folder)
-          let folder = resolve(expand(folder[1]))
+          let folder = resolve(expand(folder))
           let g:mailquery_folder = folder
         endif
       endfor
@@ -43,13 +42,12 @@ function! mailquery#SetupMailquery() abort
 
   " check whether Perl module to decode MIME headers is installed
   " thanks to https://stackoverflow.com/a/15162063
-  if !exists('s:mailquery_decodable')
-    let s:mailquery_decodable = 0
+  if !exists('s:mailquery_mimeheader')
+    let s:mailquery_mimeheader = 0
     if executable('perl')
-      call system("perl -e 'use Encode::MIME::Header;'")
       silent call system("perl -e 'use Encode::MIME::Header;'")
       if v:shell_error == 0
-        let s:mailquery_decodable = 1
+        let s:mailquery_mimeheader = 1
       endif
     endif
   endif
@@ -84,17 +82,21 @@ function! mailquery#complete(findstart, base) abort
     endif
 
     let before = '^[^@]*'
-    let base   = escape(a:base, '\-[]{}()*+?.^$|')
+    let base = a:base
+    if base =~# '[^\x00-\x7F]' && s:mailquery_mimeheader
+      silent let base = system("perl -CS -MEncode -ne 'print encode(\"MIME-Q\", $_)'", base)
+      let base = matchstr(base, '\c\v^\V=?UTF-8?Q?\v\zs.*\ze\V?=\v$')
+    endif
+    let base   = escape(base, '\-[]{}()*+?.^$|')
     let after  = '[^@]*($|[@])'
     let pattern_perl = before . base . after
 
     let lines = []
     if s:mailquery_executable
-      let lines = split(system("mail-query" . " '" . pattern_perl . "' " . g:mailquery_folder), '\n')
+      silent let lines = split(system("mail-query" . " '" . pattern_perl . "' " . g:mailquery_folder), '\n')
     endif
     " convert MIME headers via Perl thanks to https://superuser.com/a/972248
-    if s:mailquery_decodable
-      let lines = split(system("perl -CS -MEncode -ne 'print decode(\"MIME-Header\", $_)'", lines), '\n')
+    if s:mailquery_mimeheader
       silent let lines = split(system("perl -CS -MEncode -ne 'print decode(\"MIME-Header\", $_)'", lines), '\n')
     endif
 
@@ -119,6 +121,11 @@ function! mailquery#complete(findstart, base) abort
       endif
 
       let words = split(line, '\t')
+
+      if len(words) < 2
+        continue
+      endif
+
       let dict = {}
       let address = words[0]
 
