@@ -12,6 +12,7 @@ function! mailquery#SetupMailquery() abort
   if !exists('g:mailquery_folder')
     if executable('mutt')
       let output = split(system('mutt -Q "folder"'), '\n')
+      silent let output = split(system('mutt -Q "folder"'), '\n')
 
       for line in output
         let folder = matchlist(line,'\v^\s*' . 'folder' . '\s*\=\s*[''"]?([^''"]*)[''"]?$')
@@ -46,6 +47,7 @@ function! mailquery#SetupMailquery() abort
     let s:mailquery_decodable = 0
     if executable('perl')
       call system("perl -e 'use Encode::MIME::Header;'")
+      silent call system("perl -e 'use Encode::MIME::Header;'")
       if v:shell_error == 0
         let s:mailquery_decodable = 1
       endif
@@ -93,6 +95,7 @@ function! mailquery#complete(findstart, base) abort
     " convert MIME headers via Perl thanks to https://superuser.com/a/972248
     if s:mailquery_decodable
       let lines = split(system("perl -CS -MEncode -ne 'print decode(\"MIME-Header\", $_)'", lines), '\n')
+      silent let lines = split(system("perl -CS -MEncode -ne 'print decode(\"MIME-Header\", $_)'", lines), '\n')
     endif
 
     if empty(lines)
