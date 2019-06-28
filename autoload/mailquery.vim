@@ -57,12 +57,14 @@ function! mailquery#SetupMailquery() abort
     let g:mailquery_folder = ''
   endif
 
-  if !exists('s:mailquery_executable') && executable('mail-query')
-    let s:mailquery_executable = 1
-  else
-    echoerr 'No executable mail-query found.'
-    echoerr 'Please install mail-query from https://github.com/pbrisbin/mail-query!'
-    let s:mailquery_executable = 0
+  if !exists('s:mailquery_executable') 
+    if executable('mail-query')
+      let s:mailquery_executable = 1
+    else
+      echoerr 'No executable mail-query found.'
+      echoerr 'Please install mail-query from https://github.com/pbrisbin/mail-query!'
+      let s:mailquery_executable = 0
+    endif
   endif
 endfunction
 
