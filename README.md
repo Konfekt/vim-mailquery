@@ -58,7 +58,7 @@ mode. See `:help i_CTRL-X_CTRL-O` and `:help compl-omni`.
     to your `vimrc`, which will discard all e-mail addresses that satisfy the regular expression given by the variable `g:mailquery_filter_regex` that defaults to
 
     ```vim
-    let g:mailquery_filter_regex = '\v^[[:alnum:]._%+-]*%([0-9]{9,}|([0-9]+[a-z]+){3,}|\+|not?([-_.])?reply|<(un)?subscribe>|<mailer\-daemon>)[[:alnum:]._%+-]*\@'
+    let g:mailquery_filter_regex = '\v^[[:alnum:]._%+-]*%([0-9]{9,}|([0-9]+[a-z]+){3,}|\+|nicht-?antworten|ne-?pas-?repondre|not?([-_.])?reply|<(un)?subscribe>|<mailer\-daemon>)[[:alnum:]._%+-]*\@'
     ```
 
 # Related Plug-ins
