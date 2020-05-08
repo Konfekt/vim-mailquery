@@ -51,7 +51,7 @@ mode. See |i_CTRL-X_CTRL-O| and |compl-omni|.
    UTF-8 in the nineties).
 
 2. The mail folder is automatically set to the value of the variable $folder
-   in the file ~/.muttrc. To explicitly set the path to a mail folder
+   used by mutt. To explicitly set the path to a mail folder
    $folder, add to your .vimrc the line
 >
     let g:mailquery_folder = '$folder'

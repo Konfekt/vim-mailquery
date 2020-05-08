@@ -36,7 +36,7 @@ mode. See `:help i_CTRL-X_CTRL-O` and `:help compl-omni`.
     To decode [7-bit ASCII encoded MIME-headers](https://tools.ietf.org/html/rfc2047) (which start, for example, with `=?UTF-8?Q?` or `=?ISO-8859-1?Q?`), ensure that `perl` is executable and the [Encode::MIME:Header](https://perldoc.perl.org/Encode/MIME/Header.html) module is installed.
     Please note that when completing non-`ASCII` characters, then only `UTF-8` encoded non-`ASCII` characters in the mail folder can be found, but none encoded in `ISO-8859-1(5)` or any other encoding (common before the advent of `UTF-8` in the nineties).
 
-2. The mail folder is automatically set to the value of the variable `$folder` in the file `~/.muttrc`.
+2. The mail folder is automatically set to the value of the variable `$folder` used by `mutt`.
     To explicitly set the path to a mail folder `$folder`, add to your `.vimrc` the line
 
     ```vim

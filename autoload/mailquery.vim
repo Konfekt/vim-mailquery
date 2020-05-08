@@ -8,36 +8,49 @@ function! mailquery#SetupMailquery() abort
       let g:mailquery_filter_regex = '\v^[[:alnum:]._%+-]*%([0-9]{9,}|([0-9]+[a-z]+){3,}|\+|nicht-?antworten|ne-?pas-?repondre|not?([-_.])?reply|<(un)?subscribe>|<MAILER\-DAEMON>)[[:alnum:]._%+-]*\@'
     endif
   endif
+
   " Setup g:mailquery_folder
   if !exists('g:mailquery_folder')
-    if executable('mutt')
-      silent let output = split(system('mutt -Q "folder"'), '\n')
+    let g:mailquery_folder = ''
+
+    let muttexes = ['neomutt', 'mutt']
+    for muttexe in muttexes
+      if executable(muttexe) | let mutt = muttexe | break | endif
+    endfor
+
+    if exists('mutt')
+      silent let output = split(system(mutt . ' -Q "alias_file"'), '\n')
 
       for line in output
         let folder = matchstr(line,'\v^\s*' . 'folder' . '\s*\=\s*[''"]?' . '\zs[^''"]*\ze' . '[''"]?$')
         if !empty(folder)
           let g:mailquery_folder = resolve(expand(folder))
-        else
-          let g:mailquery_folder = ''
+          break
         endif
       endfor
-    elseif filereadable(expand('~/.muttrc'))
+    else
       " pedestrian's way
-      let muttrc = readfile(expand('~/.muttrc'))
-      for line in muttrc
+      let muttrcs = ['~/.config/neomutt/neomuttrc', '~/.config/neomutt/muttrc', '~/.config/mutt/neomuttrc',
+            \ '~/.config/mutt/muttrc', '~/.neomutt/neomuttrc', '~/.neomutt/muttrc', '~/.mutt/neomuttrc',
+            \ '~/.mutt/muttrc', '~/.neomuttrc', '~/.muttrc']
+      let muttrc_content = []
+      for muttrc in muttrc
+        if filereadable(expand(muttrc)) | let muttrc_content = readfile(expand(muttrc)) | break | endif
+      endfor
+
+      for line in muttrc_content
         let folder = matchstr(line,'\v^\s*set\s+' . 'folder' . '\s*\=\s*[''"]?' . '\zs[^''"]*\ze' . '[''"]?$')
         if !empty(folder)
           let folder = resolve(expand(folder))
           let g:mailquery_folder = folder
+          break
         endif
       endfor
-    else
-      let g:mailquery_folder = ''
     endif
-    if !empty(g:mailquery_folder)
-      echomsg 'Guessed mail folder by value of $folder in ~/.muttrc to be ' . g:mailquery_folder . '.'
-      " echohl 'Please set g:mailquery_folder in your vimrc to a mail folder!'
-    endif
+  endif
+  if !empty(g:mailquery_folder)
+    echomsg 'Guessed mail folder by value of $folder used by mutt to be ' . g:mailquery_folder . '.'
+    " echohl 'Please set g:mailquery_folder in your vimrc to a mail folder!'
   endif
 
   " check whether Perl module to decode MIME headers is installed
