@@ -50,7 +50,11 @@ mode. See |i_CTRL-X_CTRL-O| and |compl-omni|.
    encoded in ISO-8859-1(5) or any other encoding (common before the advent of
    UTF-8 in the nineties).
 
-2. The mail folder is automatically set to the value of the variable $folder
+2. Completion is enabled in all mail buffers by default. Add additional file
+   types to the list *g:mailquery_filetypes* which defaults to [ 'mail' ]. To
+   enable completion in other buffers, run *:MailqueryCompletion*
+
+3. The mail folder is automatically set to the value of the variable $folder
    used by mutt. To explicitly set the path to a mail folder
    $folder, add to your .vimrc the line
 >
@@ -60,7 +64,7 @@ mode. See |i_CTRL-X_CTRL-O| and |compl-omni|.
 >
     $XDG_DATA_HOME/mbsync/INBOX/cur
 <
-3. If you would like to filter out most probably impersonal e-mail addresses
+4. If you would like to filter out most probably impersonal e-mail addresses
    such as those coming from mailer daemons or accepting no reply, try
 >
     let g:mailquery_filter = 1

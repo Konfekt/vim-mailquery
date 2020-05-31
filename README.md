@@ -36,7 +36,11 @@ mode. See `:help i_CTRL-X_CTRL-O` and `:help compl-omni`.
     To decode [7-bit ASCII encoded MIME-headers](https://tools.ietf.org/html/rfc2047) (which start, for example, with `=?UTF-8?Q?` or `=?ISO-8859-1?Q?`), ensure that `perl` is executable and the [Encode::MIME:Header](https://perldoc.perl.org/Encode/MIME/Header.html) module is installed.
     Please note that when completing non-`ASCII` characters, then only `UTF-8` encoded non-`ASCII` characters in the mail folder can be found, but none encoded in `ISO-8859-1(5)` or any other encoding (common before the advent of `UTF-8` in the nineties).
 
-2. The mail folder is automatically set to the value of the variable `$folder` used by `mutt`.
+2. Completion is enabled in all mail buffers by default.
+    Add additional file types to the list `g:mailquery_filetypes` which defaults to `[ 'mail' ]`.
+    To enable completion in other buffers, run `:MailqueryCompletion`.
+
+3. The mail folder is automatically set to the value of the variable `$folder` used by `mutt`.
     To explicitly set the path to a mail folder `$folder`, add to your `.vimrc` the line
 
     ```vim
@@ -49,7 +53,7 @@ mode. See `:help i_CTRL-X_CTRL-O` and `:help compl-omni`.
     $XDG_DATA_HOME/mbsync/INBOX/cur
     ```
 
-3. If you would like to filter out most probably impersonal e-mail addresses such as those that come from mailer daemons or accept no reply, then try adding
+4. If you would like to filter out most probably impersonal e-mail addresses such as those that come from mailer daemons or accept no reply, then try adding
 
     ```vim
     let g:mailquery_filter = 1
